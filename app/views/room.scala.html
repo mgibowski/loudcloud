@@ -1,5 +1,7 @@
 @main("Room") {
 
+    @helper.requireJs(core = routes.Assets.at("javascripts/require.js").url, module = routes.Assets.at("javascripts/room").url)
+
     <div id="dropzone">
         <div class="centered">
             <div class="drop-dialog"><span>Drop soundcloud links here</span></div>

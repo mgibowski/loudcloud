@@ -10,7 +10,8 @@ object ApplicationBuild extends Build {
   val appDependencies = Seq()
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
-    lessEntryPoints <<= baseDirectory(_ / "app" / "assets" / "stylesheets" ** "loudcloud.less")
+    lessEntryPoints <<= baseDirectory(_ / "app" / "assets" / "stylesheets" ** "loudcloud.less"),
+    requireJs += "room.js"
   )
 
 }
