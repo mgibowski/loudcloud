@@ -1,0 +1,23 @@
+<div class="track fadein">
+    <div class="span8 details">
+        <table>
+            <tbody>
+                <tr class="track-header">
+                    <td class="artwork" rowspan="3">
+                        <image class="artwork" src="{{track.artwork_url}}"></image>
+                    </td>
+                    <td class="timestamp">
+                        <!--<span class="timestamp">{{playedAt}}</span>-->
+                        <span class="now-playing">Now playing</span>
+                    </td>
+                </tr>
+                <tr class="track-info">
+                    <td colspan="1">
+                        <div class="title"><a href="{{track.permalink_url}}">{{track.title}}</a></div>
+                        <div class="artist"><a href="{{track.permalink_url}}>">{{track.user.username}}</a></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

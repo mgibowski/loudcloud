@@ -8,6 +8,10 @@ define ['scClientId'], (scClientId) ->
       dataType: 'jsonp'
       crossDomain: true
       success: (data) ->
-        console.log(data)
+        trackInfo =
+          track: data
+          playedAt: "15:33"
+        trackHtml = Mustache.render(MUSTACHE_TEMPLATES['track'], trackInfo)
+        $("#playlist").append(trackHtml)
     false
   )
