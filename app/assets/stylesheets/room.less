@@ -1,0 +1,139 @@
+.add-track {
+	padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+	border: 1px solid hsl(0, 0%, 70%);
+}
+
+#playlist {
+  .track {
+    a {
+      color: hsl(0, 0%, 20%);
+      text-decoration: none;
+    }
+    a:hover {
+      color: hsl(0, 50%, 50%);
+      text-decoration: none;
+    }
+    .title {
+    	font-size: 20px;
+    	font-weight: 200;
+    }
+    .artist {
+    	font-size: 14px;
+    	font-style: italic;
+    }
+    .details {
+      border-bottom: 1px solid gray;
+      table {
+        width: 100%;
+        td.timestamp {
+        	text-align: right;
+        	font-size: 20px;
+        	font-weight: 100;
+        }
+      }
+    }
+  }
+}
+
+
+
+.track .now-playing {
+	color: darkred;
+}
+
+.track.played .now-playing, .track.unplayed .now-playing {
+	display: none;
+}
+
+.track.playing td .timestamp {
+	display: none;
+}
+
+
+/* Track Animations */
+
+.fadein {
+	-webkit-animation-name: track-fadein;
+	-webkit-animation-duration: 1s;
+	-moz-animation-name: track-fadein;
+	-moz-animation-duration: 1s;
+}
+
+@-webkit-keyframes track-fadein {
+	from {
+		opacity: 0.0;
+	}
+	to {
+		opacity: 1.0;
+	}
+}
+
+@-moz-keyframes track-fadein {
+	from {
+		opacity: 0.0;
+	}
+	to {
+		opacity: 1.0;
+	}
+}
+
+/* Dropzone */
+
+#dropzone {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	background: rgba(60, 60, 60, 0.0);
+	z-index: -1;
+	display: table;
+}
+
+#dropzone.raised {
+	background: rgba(60, 60, 60, 0.5);
+	z-index: 9999;
+}
+
+#dropzone .centered {
+	width: 100%;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#dropzone .drop-dialog {
+	visibility: hidden;
+	pointer-events: none;
+	font-size: 35px;
+	font-family: helvetica;
+	font-weight: bold;
+	text-align: center;
+	text-shadow: 1px 1px 0 hsl(90, 0%, 42%);
+	color: hsl(90, 0%, 10%);
+	background: hsla(90, 0%, 30%, 1.0);
+	border-radius: 10px;
+	width: 500px;
+	padding: 20px;
+	margin: 0 auto;
+}
+
+#dropzone .drop-dialog.success {
+	text-shadow: 1px 1px 0 hsl(90, 90%, 42%);
+	color: hsl(90, 90%, 10%);
+	background: hsla(90, 90%, 30%, 1.0);
+}
+
+#dropzone .drop-dialog.failure {
+	text-shadow: 1px 1px 0 hsl(8, 90%, 42%);
+	color: hsl(8, 90%, 10%);
+	background: hsla(8, 90%, 30%, 1.0);
+}
+
+#dropzone.raised .drop-dialog {
+	visibility: visible;
+}
+
+#error {
+	display: none;
+}

@@ -1,7 +1,41 @@
-@(message: String)
+@main("Welcome to Loudcloud!") {
 
-@main("Welcome to Play 2.1") {
-    
-    @play20.welcome(message)
+    <div class="jumbotron">
+        <h1> Welcome to the loud side of the internet </h1>
+        <p class="lead"> Loudcloud lets you listen to music online with your friends collaboratively. Create playlists together
+            and listen to the same tracks at the same time from different parts of the planet.</p>
+        <a class="btn btn-large btn-success" href="@routes.Application.room().url"> New private room </a>
+        <a class="btn btn-large btn-success" href="@routes.Application.room().url"> New public room </a>
+    </div>
+
+    <hr>
+
+    <div class="row-fluid rooms-listing">
+        <div class="span6">
+            <h4> <a href="#"> @@mgibowski </a> 's room </h4>
+            <p> 15 people are now listening to: <a href="#"> Pilocka Krach - Oh Yeah, Voll Krass </a>
+                    &nbsp; <a class="btn btn-small btn-info" href="#"> join them &rsaquo; &rsaquo; </a>
+            </p>
+
+            <h4> <a href="#"> @@typfel </a> 's room </h4>
+            <p> Nobody is listening to anything anymore, but the room
+                is still there for you to <a class="btn btn-small btn-info" href="#"> browse &rsaquo; &rsaquo; </a> </p>
+
+            <h4> Subheading </h4>
+            <p> Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        </div>
+
+        <div class="span6">
+            <h4> <a href="#"> @@typfel </a> 's room </h4>
+            <p> Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+
+            <h4> Subheading </h4>
+            <p> Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+            <h4> Subheading </h4>
+            <p> Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        </div>
+    </div>
+
     
 }
