@@ -1,13 +1,13 @@
-<div class="track fadein">
+<div class="track fadein queued">
     <div class="span8 details">
         <table>
             <tbody>
                 <tr class="track-header">
                     <td class="artwork" rowspan="3">
-                        <image class="artwork" src="{{track.artwork_url}}"></image>
+                        <img class="artwork" height="100" width="100" src="{{track.artwork_url}}"></img>
                     </td>
-                    <td class="timestamp">
-                        <!--<span class="timestamp">{{playedAt}}</span>-->
+                    <td class="when-played">
+                        <span class="played-at"> {{playedAt}} </span>
                         <span class="now-playing">Now playing</span>
                     </td>
                 </tr>
@@ -20,4 +20,5 @@
             </tbody>
         </table>
     </div>
+    <input type="hidden" class="trackId" value="{{track.id}}">
 </div>

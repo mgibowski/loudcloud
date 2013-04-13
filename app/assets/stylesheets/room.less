@@ -26,30 +26,34 @@
       border-bottom: 1px solid gray;
       table {
         width: 100%;
-        td.timestamp {
-        	text-align: right;
-        	font-size: 20px;
-        	font-weight: 100;
+        td.when-played {
+          text-align: right;
+          font-size: 20px;
+          font-weight: 100;
+          .now-playing {
+          	color: darkred;
+          }
         }
       }
     }
   }
+  .playing {
+    .details{
+      background-color: rgba(78, 205, 196, 0.50);
+    }
+   .played-at {display: none;}
+  }
+  .played {
+    color: @grayLight;
+    a {
+      color: @grayLight;
+    }
+    .now-playing {display: none;}
+  }
+  .queued {
+    .now-playing {display: none;}
+  }
 }
-
-
-
-.track .now-playing {
-	color: darkred;
-}
-
-.track.played .now-playing, .track.unplayed .now-playing {
-	display: none;
-}
-
-.track.playing td .timestamp {
-	display: none;
-}
-
 
 /* Track Animations */
 
