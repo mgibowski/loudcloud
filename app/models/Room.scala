@@ -21,7 +21,8 @@ object RoomStore{
 
   def createRoom() = {
     val roomId = generateId()
-    val room = Akka.system.actorOf(Props[Room])
+    val props = Props(new Room(roomId))
+    val room = Akka.system.actorOf(props)
     rooms.put(roomId, room)
     roomId
   }
@@ -47,7 +48,7 @@ object Room {
   }
 }
 
-class Room extends Actor {
+class Room(id: String) extends Actor {
 
   var members = Set.empty[String]
   val (roomEnumerator, roomChannel) = Concurrent.broadcast[JsValue]

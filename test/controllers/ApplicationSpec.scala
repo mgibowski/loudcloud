@@ -11,6 +11,8 @@ import play.api.test.Helpers._
  * For more information, consult the wiki.
  */
 class ApplicationSpec extends Specification {
+
+  skipAll
   
   "Application" should {
     

@@ -1,68 +1,97 @@
 package models
 
 import org.specs2.mutable.Specification
-import org.joda.time.{DateTimeUtils, DateTime, Duration}
+import org.joda.time.{DateTimeUtils, DateTime}
+
+import TrackFactory._
+import scala.concurrent.{duration, Await}
+import org.specs2.matcher.MatchResult
 
 /**
  * @author: mgibowski
  */
 class PlaylistSpec extends Specification{
 
-  val LONG_TIME_AGO = 90
-  val CURRENT_MOMENT = 90909090
-  val TRACK_LENGTH = 3000
-  DateTimeUtils.setCurrentMillisFixed(CURRENT_MOMENT)
+  object Given{
+    val longTimeAgo = 90
+    val currentMoment = 90909090
+    val playlistId = "516eecbb4fdc459e3c9b2c72"
+    val track = createTrack()
+    val atMostDuration = duration.Duration(200, duration.MILLISECONDS)
+  }
+
+  import Given._
+
+  object Helpers{
+    def endOf(p: Playlist)(implicit store: PlaylistStore) = Await.result(p.endTime, atMostDuration)
+    def tracksFrom(p: Playlist)(implicit store: PlaylistStore) = Await.result(p.tracks, atMostDuration)
+    def addTrack(p: Playlist, track: Track)(implicit store: PlaylistStore) = Await.result(p.addTrack(track), atMostDuration)
+  }
+
+  import Helpers._
+
+  DateTimeUtils.setCurrentMillisFixed(currentMoment)
+
+  def test(playlist: Playlist)(check: Playlist => MatchResult[_])(implicit store: PlaylistStore){
+    addTrack(playlist, track)
+    check.apply(playlist)
+  }
 
   "Adding track to an empty playlist" should {
-    // Given
-    implicit val store: PlaylistStore = new SimplePlaylistStore
-    val emptyPlaylist = new Playlist()
-    val track = Track(duration = new Duration(TRACK_LENGTH))
-    // When
-    emptyPlaylist.addTrack(track)
-    // Then
+    def emptyPlaylist = new Playlist(playlistId)
     "make the playlist end at current moment + track duration" in {
-      emptyPlaylist.endTime must beSome(new DateTime(CURRENT_MOMENT + TRACK_LENGTH))
+      implicit val store = new SimplePlaylistStore
+      test(emptyPlaylist){
+        endOf(_) must beSome(new DateTime(currentMoment + defaultTrackLength))
+      }
     }
     "make the playlist have a track starting at current moment" in {
-      emptyPlaylist.tracks.headOption.map(_.startTime) must beSome(new DateTime(CURRENT_MOMENT))
+      implicit val store = new SimplePlaylistStore
+      test(emptyPlaylist){
+        tracksFrom(_).headOption.map(_.startTime) must beSome(new DateTime(currentMoment))
+      }
     }
   }
 
   "Adding track to non-empty playlist" should {
-    // Given
-    implicit val store: PlaylistStore = new SimplePlaylistStore
-    val playlist = new Playlist()
-    val track = Track(duration = new Duration(TRACK_LENGTH))
-    playlist.addTrack(track)
-    val endBefore = playlist.endTime.get
-    // When
-    playlist.addTrack(track)
-    // Then
+    def nonEmptyPlaylist(implicit store: PlaylistStore) = {val playlist = new Playlist(playlistId); addTrack(playlist, track); playlist}
     "make the playlist end at current moment + track duration" in {
-      playlist.endTime must beSome(endBefore.plus(TRACK_LENGTH))
+      implicit val store = new SimplePlaylistStore
+      val sut = nonEmptyPlaylist
+      val previousEndTime = endOf(sut).get
+      test(sut){
+        endOf(_) must beSome(previousEndTime.plus(defaultTrackLength))
+      }
     }
     "make the last track start at previous playlist end time" in {
-      playlist.tracks.headOption.map(_.startTime) must beSome(endBefore)
+      implicit val store = new SimplePlaylistStore
+      val sut = nonEmptyPlaylist
+      val previousEndTime = endOf(sut).get
+      test(sut){
+        tracksFrom(_).headOption.map(_.startTime) must beSome(previousEndTime)
+      }
     }
   }
 
   "Adding track to a finished playlist" should {
-    // Given
-    DateTimeUtils.setCurrentMillisFixed(LONG_TIME_AGO)
-    implicit val store: PlaylistStore = new SimplePlaylistStore
-    val playlist = new Playlist()
-    val track = Track(duration = new Duration(TRACK_LENGTH))
-    playlist.addTrack(track)
-    DateTimeUtils.setCurrentMillisFixed(CURRENT_MOMENT)
-    // When
-    playlist.addTrack(track)
-    // Then
+    def finishedPlaylist(implicit store: PlaylistStore) = {
+      DateTimeUtils.setCurrentMillisFixed(longTimeAgo)
+      val playlist = new Playlist(playlistId)
+      addTrack(playlist, track)
+      DateTimeUtils.setCurrentMillisFixed(currentMoment)
+      playlist
+    }
     "make the playlist end at current moment + track duration" in {
-      playlist.endTime must beSome(new DateTime(CURRENT_MOMENT + TRACK_LENGTH))
+      implicit val store = new SimplePlaylistStore
+      test(finishedPlaylist){
+        endOf(_) must beSome(new DateTime(currentMoment + defaultTrackLength))
+      }
     }
     "make the playlist have a track starting at current moment" in {
-      playlist.tracks.headOption.map(_.startTime) must beSome(new DateTime(CURRENT_MOMENT))
+      implicit val store = new SimplePlaylistStore
+      test(finishedPlaylist){
+        tracksFrom(_).headOption.map(_.startTime) must beSome(new DateTime(currentMoment))
+      }
     }
   }
 
