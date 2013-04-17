@@ -33,6 +33,7 @@ define ['scClientId'], (scClientId) ->
         trackInfo =
           track: data
           playedAt: "15:33"
+#        console.log(data)
         window.roomSocket.send(JSON.stringify(trackInfo))
     false
 
