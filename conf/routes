@@ -3,8 +3,10 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
-GET     /room                       controllers.Application.room
+GET     /                               controllers.Application.index
+POST    /room/new                       controllers.Application.createRoom
+GET     /room/:id                       controllers.Application.enterRoom(id: String)
+GET     /room/:id/ws                    controllers.Application.roomWS(id: String)
 
 GET     /assets/javascripts/scClientId.js          controllers.Application.soundCloudClientId
 GET     /assets/javascripts/scClientId.min.js      controllers.Application.soundCloudClientId

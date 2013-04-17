@@ -1,11 +1,13 @@
 @main("Welcome to Loudcloud!") {
 
+    @helper.requireJs(core = routes.Assets.at("javascripts/require.js").url, module = routes.Assets.at("javascripts/home").url)
+
     <div class="jumbotron">
         <h1> Welcome to the loud side of the internet </h1>
         <p class="lead"> Loudcloud lets you listen to music online with your friends collaboratively. Create playlists together
             and listen to the same tracks at the same time from different parts of the planet.</p>
-        <a class="btn btn-large btn-success" href="@routes.Application.room().url"> New private room </a>
-        <a class="btn btn-large btn-success" href="@routes.Application.room().url"> New public room </a>
+        <a class="btn btn-large btn-success" href="#"> New private room </a>
+        <a id="new-public-room" class="btn btn-large btn-success" href="#"> New public room </a>
     </div>
 
     <hr>

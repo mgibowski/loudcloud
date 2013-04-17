@@ -1,5 +1,5 @@
 define ['scClientId'], (scClientId) ->
-  # Update playlist if nothing playing & we have a queue
+  # Check if we shouldn't start playing sth new
   updatePlaylist = () ->
     lastQueuedTrack = $(".queued").last()
     playingAnything = $(".playing").length > 0
@@ -20,8 +20,8 @@ define ['scClientId'], (scClientId) ->
         $(".playing").removeClass("playing").addClass("played")
         updatePlaylist()
 
-  # Handle adding new track to the playlist
-  $("form.add-track button").click( ->
+  # User adds new track to the playlist
+  $("form.add-track button").click ->
     url = $("form.add-track input").val()
     resolveUrl = "http://api.soundcloud.com/resolve.json?url=" + url + "&client_id=" + scClientId
     $.ajax
@@ -33,14 +33,30 @@ define ['scClientId'], (scClientId) ->
         trackInfo =
           track: data
           playedAt: "15:33"
-        trackHtml = Mustache.render(MUSTACHE_TEMPLATES['track'], trackInfo)
-        $("#playlist").prepend(trackHtml)
-        updatePlaylist()
+        window.roomSocket.send(JSON.stringify(trackInfo))
     false
-  )
+
+  # Receiving things from WebSocket
+  receiveEvent = (event) ->
+    data = $.parseJSON(event.data)
+    if data.msg?
+      console.log(data.msg)
+    if data.track?
+      trackHtml = Mustache.render(MUSTACHE_TEMPLATES['track'], data)
+      $("#playlist").prepend(trackHtml)
+      updatePlaylist()
+
+  # Connecting to Room WebSocket
+  connectToWs = () ->
+    url = "ws://localhost:9000" + window.location.pathname + "/ws"
+#    WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
+    WS = WebSocket
+    window.roomSocket = new WS(url)
+    window.roomSocket.onmessage = receiveEvent
 
   # Initialize SounCloud API & bootstrap page
   SC.initialize(
     client_id: scClientId
   )
   playTrackMarkedForPlaying()
+  connectToWs()
