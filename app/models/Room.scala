@@ -12,16 +12,17 @@ import akka.pattern.ask
 
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits._
-import scala.util.Random
+import reactivemongo.bson.BSONObjectID
+
+import JsonImplicits._
+import scala.concurrent.{duration, Await}
 
 object RoomStore{
   val rooms = scala.collection.concurrent.TrieMap[String, ActorRef]()
 
-  def generateId() = Random.nextInt().toString
-
   def createRoom() = {
-    val roomId = generateId()
-    val props = Props(new Room(roomId))
+    val roomId = BSONObjectID.generate.stringify
+    val props = Props(new Room(roomId, new Playlist(roomId)(MongoPlaylistStore)))
     val room = Akka.system.actorOf(props)
     rooms.put(roomId, room)
     roomId
@@ -48,10 +49,11 @@ object Room {
   }
 }
 
-class Room(id: String) extends Actor {
+class Room(id: String, playlist: Playlist) extends Actor {
 
   var members = Set.empty[String]
   val (roomEnumerator, roomChannel) = Concurrent.broadcast[JsValue]
+  val maxInsertTime = duration.Duration(200, duration.MILLISECONDS)
 
   def receive = {
 
@@ -65,8 +67,11 @@ class Room(id: String) extends Actor {
       notifyAll(username, Json.obj("msg" -> s"$username has entered the room"))
     }
 
-    case SendTrack(username, track) => {
-      notifyAll(username, track)
+    case SendTrack(username, trackJson) => {
+      val track = trackJson.as[Track]
+      val addedStatus = playlist.addTrack(track)
+      if (Await.result(addedStatus, maxInsertTime))
+        notifyAll(username, trackJson)
     }
 
     case Quit(username) => {

@@ -6,6 +6,7 @@ package models
 import play.api.mvc._
 import org.joda.time.{Duration, DateTime}
 import reactivemongo.bson.handlers.{BSONWriter, BSONReader}
+import play.api.Logger
 
 // Reactive Mongo imports
 import reactivemongo.api._
@@ -18,7 +19,7 @@ import play.modules.reactivemongo._
 
 import play.api.Play.current
 
-object MongoPlaylistStore extends Controller with MongoController{
+object MongoPlaylistStore extends Controller with MongoController with PlaylistStore{
   val db = ReactiveMongoPlugin.db
   lazy val playListItems = db("PlaylistItems")
 
@@ -30,9 +31,13 @@ object MongoPlaylistStore extends Controller with MongoController{
     playListItems.find[PlaylistItem](query).toList()
   }
 
-  def addItem(item: PlaylistItem) = {
-    playListItems.insert[PlaylistItem](item).map(_.ok)
+  def addItem(item: PlaylistItem) = playListItems.insert[PlaylistItem](item).map{ lastError =>
+    if (lastError.inError) {
+      Logger.error("Problem with storing track in MongoDB", lastError.getCause)
+    }
+    lastError.ok
   }
+
 }
 
 object PlaylistItemBSONReader extends BSONReader[PlaylistItem]{

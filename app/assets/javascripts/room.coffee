@@ -30,11 +30,14 @@ define ['scClientId'], (scClientId) ->
       dataType: 'jsonp'
       crossDomain: true
       success: (data) ->
-        trackInfo =
-          track: data
-          playedAt: "15:33"
-#        console.log(data)
-        window.roomSocket.send(JSON.stringify(trackInfo))
+        track =
+          soundCloudId: data.id
+          title: data.title
+          soundCloudUsername: data.user.username
+          permalinkUrl: data.permalink_url
+          artworkUrl: data.artwork_url
+          duration: data.duration
+        window.roomSocket.send(JSON.stringify(track))
     false
 
   # Receiving things from WebSocket
@@ -42,7 +45,7 @@ define ['scClientId'], (scClientId) ->
     data = $.parseJSON(event.data)
     if data.msg?
       console.log(data.msg)
-    if data.track?
+    if data.soundCloudId?
       trackHtml = Mustache.render(MUSTACHE_TEMPLATES['track'], data)
       $("#playlist").prepend(trackHtml)
       updatePlaylist()
