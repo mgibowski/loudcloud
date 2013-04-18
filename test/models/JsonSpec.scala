@@ -42,6 +42,7 @@ class JsonSpec extends Specification{
       val playlistItem = new PlaylistItem(
         playlistId = BSONObjectID.generate,
         startTime = new DateTime(1231123123),
+        status = None,
         track = trackJson.as[Track]
       )
       // When
