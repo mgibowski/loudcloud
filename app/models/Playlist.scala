@@ -8,9 +8,8 @@ import play.api.libs.concurrent.Execution.Implicits._
 /**
  * @author: mgibowski
  */
-case class Playlist(id: String){
-
-  def addTrack(track: Track)(implicit store: PlaylistStore) = {
+case class Playlist(id: String)(store: PlaylistStore){
+  def addTrack(track: Track) = {
     for {
       maybeEnd <- endTime
       now = DateTime.now()
@@ -22,9 +21,8 @@ case class Playlist(id: String){
       ok <- store.addItem(PlaylistItem(this.id, trackStart, track))
     } yield ok
   }
-
-  def tracks(implicit store: PlaylistStore) = store.findItems(id)
-  def endTime(implicit store: PlaylistStore) = store.findItems(id).map(_.headOption.map(_.endTime))
+  def tracks = store.findItems(id)
+  def endTime = store.findItems(id).map(_.headOption.map(_.endTime))
 }
 
 case class Track(soundCloudId: Long, title: String, soundCloudUsername: String, permalinkUrl: String, artworkUrl: String, duration: Duration)
