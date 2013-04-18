@@ -45,7 +45,7 @@ object Playlist{
   }
 }
 
-case class Track(soundCloudId: Long, title: String, soundCloudUsername: String, permalinkUrl: String, artworkUrl: String, duration: Duration)
+case class Track(soundCloudId: Long, title: String, soundCloudUsername: String, soundCloudUsernameUrl: String, permalinkUrl: String, artworkUrl: String, duration: Duration)
 case class PlaylistItem(playlistId: BSONObjectID, startTime: DateTime, status: Option[PlaylistItemStatus], track: Track){
   def endTime = startTime.plus(track.duration)
   def withStatus = {

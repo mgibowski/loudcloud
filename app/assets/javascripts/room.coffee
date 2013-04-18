@@ -34,6 +34,7 @@ define ['scClientId'], (scClientId) ->
           soundCloudId: data.id
           title: data.title
           soundCloudUsername: data.user.username
+          soundCloudUsernameUrl: data.user.permalink_url
           permalinkUrl: data.permalink_url
           artworkUrl: data.artwork_url
           duration: data.duration

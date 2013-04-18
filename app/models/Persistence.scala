@@ -47,11 +47,12 @@ object PlaylistItemBSONReader extends BSONReader[PlaylistItem]{
     val startTime = new DateTime(d.getAs[BSONDateTime]("startTime").get.value)
     val soundCloudId = d.getAs[BSONLong]("soundCloudId").get.toLong
     val soundCloudUsername = d.getAs[BSONString]("soundCloudUsername").get.value
+    val soundCloudUsernameUrl = d.getAs[BSONString]("soundCloudUsernameUrl").get.value
     val title = d.getAs[BSONString]("title").get.value
     val permalinkUrl = d.getAs[BSONString]("permalinkUrl").get.value
     val artworkUrl = d.getAs[BSONString]("artworkUrl").get.value
     val durationMillis = d.getAs[BSONLong]("duration").get.toLong
-    val track = Track(soundCloudId, title, soundCloudUsername, permalinkUrl, artworkUrl, new Duration(durationMillis))
+    val track = Track(soundCloudId, title, soundCloudUsername, soundCloudUsernameUrl, permalinkUrl, artworkUrl, new Duration(durationMillis))
     PlaylistItem(playlistId, startTime, track)
   }
 }
@@ -62,6 +63,7 @@ object PlaylistItemBSONWriter extends BSONWriter[PlaylistItem] {
     "startTime" -> BSONDateTime(i.startTime.getMillis),
     "soundCloudId" -> BSONLong(i.track.soundCloudId),
     "soundCloudUsername" -> BSONString(i.track.soundCloudUsername),
+    "soundCloudUsernameUrl" -> BSONString(i.track.soundCloudUsernameUrl),
     "title" -> BSONString(i.track.title),
     "permalinkUrl" -> BSONString(i.track.permalinkUrl),
     "artworkUrl" -> BSONString(i.track.artworkUrl),

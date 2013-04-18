@@ -12,5 +12,6 @@ object TrackFactory {
   def createTrack(lengthMillis: Long = defaultTrackLength) = Track(
         duration = new Duration(lengthMillis), soundCloudId = 666,
         title = "Oops I did it again", soundCloudUsername = "Britney",
+        soundCloudUsername = "URL",
         permalinkUrl = "spermalink-url", artworkUrl = "nowork-url")
 }

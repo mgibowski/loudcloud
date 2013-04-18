@@ -18,6 +18,7 @@ class JsonSpec extends Specification{
       | "soundCloudId": 18589213,
       | "title": "Ritual Union (Maya Jane Coles Remix)",
       | "soundCloudUsername": "Peacefrog Records",
+      | "soundCloudUsernameUrl": "http://soundcloud.com/ubpromotions",
       | "permalinkUrl" : "http://soundcloud.com/peacefrog-records/ritual-union-maya-jane-coles",
       | "artworkUrl": "http://i1.sndcdn.com/artworks-000009042687-dpsn6u-large.jpg?e48997d",
       | "duration" : 248989
@@ -30,6 +31,7 @@ class JsonSpec extends Specification{
       track.soundCloudId must beEqualTo(18589213)
       track.title must beEqualTo("Ritual Union (Maya Jane Coles Remix)")
       track.permalinkUrl must beEqualTo("http://soundcloud.com/peacefrog-records/ritual-union-maya-jane-coles")
+      track.soundCloudUsernameUrl must beEqualTo("http://soundcloud.com/ubpromotions")
       track.artworkUrl must beEqualTo("http://i1.sndcdn.com/artworks-000009042687-dpsn6u-large.jpg?e48997d")
       track.duration must beEqualTo(new Duration(248989))
     }
