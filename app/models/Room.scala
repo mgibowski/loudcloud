@@ -20,12 +20,16 @@ import scala.concurrent.duration
 object RoomStore{
   val rooms = scala.collection.concurrent.TrieMap[String, ActorRef]()
 
-  def createRoom() = {
+  def createNewRoom() = {
     val roomId = BSONObjectID.generate.stringify
+    createRoomWith(roomId)
+    roomId
+  }
+
+  def createRoomWith(roomId: String) {
     val props = Props(new Room(roomId, new Playlist(roomId)(MongoPlaylistStore)))
     val room = Akka.system.actorOf(props)
     rooms.put(roomId, room)
-    roomId
   }
 
   def findRoomBy(roomId: String) = rooms.get(roomId)

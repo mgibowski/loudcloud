@@ -10,7 +10,7 @@ define ['scClientId'], (scClientId) ->
   # Play the track
   playTrackMarkedForPlaying = () ->
     toBePlayed = $(".playing")
-    if toBePlayed?
+    if toBePlayed.length == 1
       trackId = toBePlayed.find(".trackId").val()
       playTrackById(trackId)
 
@@ -46,6 +46,8 @@ define ['scClientId'], (scClientId) ->
     if data.msg?
       console.log(data.msg)
     if data.track?
+      start = new Date(data.startTime)
+      data.startTime = start.getHours() + " : " + start.getMinutes()
       trackHtml = Mustache.render(MUSTACHE_TEMPLATES['track'], data)
       $("#playlist").prepend(trackHtml)
       updatePlaylist()

@@ -1,3 +1,7 @@
+@(items: Seq[PlaylistItem])
+@import PlaylistItemStatus._
+@printStatus(s: Option[PlaylistItemStatus]) = { @s.map(_.toString().toLowerCase) }
+@printTime(t: org.joda.time.DateTime) = { @t.getHourOfDay : @if(t.getMinuteOfHour < 10) {0}@t.getMinuteOfHour }
 @main("Room") {
 
     @helper.requireJs(core = routes.Assets.at("javascripts/require.js").url, module = routes.Assets.at("javascripts/room").url)
@@ -22,80 +26,34 @@
 
     <div id="playlist">
 
-        <div class="track fadein queued">
-            <div class="span8 details">
-                <table>
-                    <tbody>
-                        <tr class="track-header">
-                            <td class="artwork" rowspan="3">
-                                <img class="artwork" height="100" width="100" src="http://i1.sndcdn.com/artworks-000009042687-dpsn6u-large.jpg?e48997d">
-                            </td>
-                            <td class="when-played">
-                                <span class="played-at"> 15:13 </span>
-                                <span class="now-playing"> Now playing </span>
-                            </td>
-                        </tr>
-                        <tr class="track-info">
-                            <td colspan="1">
-                                <div class="title"> <a href="http://soundcloud.com/peacefrog-records/ritual-union-maya-jane-coles"> Ritual Union (Maya Jane Coles Remix) </a> </div>
-                                <div class="artist"> <a href="http://soundcloud.com/peacefrog-records"> Peacefrog Records </a> </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        @items.map{ item =>
+            <div class="track fadein @printStatus(item.status)">
+                <div class="span8 details">
+                    <table>
+                        <tbody>
+                            <tr class="track-header">
+                                <td class="artwork" rowspan="3">
+                                    <img class="artwork" height="100" width="100" src="@item.track.artworkUrl">
+                                </td>
+                                <td class="when-played">
+                                    <span class="played-at"> @printTime(item.startTime) </span>
+                                    <span class="now-playing"> Now playing </span>
+                                </td>
+                            </tr>
+                            <tr class="track-info">
+                                <td colspan="1">
+                                    <div class="title"> <a href="@item.track.permalinkUrl">@item.track.title</a> </div>
+                                    <div class="artist"> <a href="@item.track.permalinkUrl">@item.track.soundCloudUsername</a> </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <input type="hidden" class="trackId" value="@item.track.soundCloudId">
             </div>
-            <input type="hidden" class="trackId" value="58432359">
-        </div>
+        }
 
-        <div class="track fadein playing">
-            <div class="span8 details">
-                <table>
-                    <tbody>
-                        <tr class="track-header">
-                            <td class="artwork" rowspan="3">
-                                <img class="artwork" height="100" width="100" src="http://i1.sndcdn.com/artworks-000009042687-dpsn6u-large.jpg?e48997d">
-                            </td>
-                            <td class="when-played">
-                                <span class="played-at"> 15:13 </span>
-                                <span class="now-playing"> Now playing </span>
-                            </td>
-                        </tr>
-                        <tr class="track-info">
-                            <td colspan="1">
-                                <div class="title"> <a href="http://soundcloud.com/peacefrog-records/ritual-union-maya-jane-coles"> Ritual Union (Maya Jane Coles Remix) </a> </div>
-                                <div class="artist"> <a href="http://soundcloud.com/peacefrog-records"> Peacefrog Records </a> </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <input type="hidden" class="trackId" value="58432359">
-        </div>
 
-        <div class="track fadein played">
-            <div class="span8 details">
-                <table>
-                    <tbody>
-                        <tr class="track-header">
-                            <td class="artwork" rowspan="3">
-                                <img class="artwork" height="100" width="100" src="http://i1.sndcdn.com/artworks-000009042687-dpsn6u-large.jpg?e48997d">
-                            </td>
-                            <td class="when-played">
-                                <span class="played-at"> 15:13 </span>
-                                <span class="now-playing"> Now playing </span>
-                            </td>
-                        </tr>
-                        <tr class="track-info">
-                            <td colspan="1">
-                                <div class="title"> <a href="http://soundcloud.com/peacefrog-records/ritual-union-maya-jane-coles"> Ritual Union (Maya Jane Coles Remix) </a> </div>
-                                <div class="artist"> <a href="http://soundcloud.com/peacefrog-records"> Peacefrog Records </a> </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <input type="hidden" class="trackId" value="58432359">
-        </div>
 
     </div>
 

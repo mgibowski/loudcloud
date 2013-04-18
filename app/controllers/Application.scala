@@ -16,12 +16,26 @@ object Application extends Controller {
   }
 
   def createRoom = Action {
-    val roomId = RoomStore.createRoom()
+    val roomId = RoomStore.createNewRoom()
     Ok(Json.obj("roomId" -> JsString(roomId))).as("application/json; charset=utf-8")
   }
 
   def enterRoom(id: String) = Action {
-    Ok(views.html.room())
+    Async {
+      for {
+        playlistItems <- MongoPlaylistStore.findItems(id).map(Playlist.withStatuses _)
+        room = RoomStore.findRoomBy(id)
+      } yield {
+        (room.isDefined, !playlistItems.isEmpty) match {
+          case (false, false) => NotFound("Room not found")
+          case (false, true) => { // room exists, but actor is dead
+            RoomStore.createRoomWith(id)
+            Ok(views.html.room(playlistItems))
+          }
+          case (_, _) => Ok(views.html.room(playlistItems))
+        }
+      }
+    }
   }
 
   /**
