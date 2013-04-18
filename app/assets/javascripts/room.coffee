@@ -45,7 +45,7 @@ define ['scClientId'], (scClientId) ->
     data = $.parseJSON(event.data)
     if data.msg?
       console.log(data.msg)
-    if data.soundCloudId?
+    if data.track?
       trackHtml = Mustache.render(MUSTACHE_TEMPLATES['track'], data)
       $("#playlist").prepend(trackHtml)
       updatePlaylist()

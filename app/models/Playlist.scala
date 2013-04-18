@@ -22,6 +22,7 @@ case class Playlist(id: String)(store: PlaylistStore){
     } yield ok
   }
   def tracks = store.findItems(id)
+  def lastAdded = store.findItems(id).map(_.headOption)
   def endTime = store.findItems(id).map(_.headOption.map(_.endTime))
 }
 

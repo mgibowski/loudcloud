@@ -15,7 +15,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 import reactivemongo.bson.BSONObjectID
 
 import JsonImplicits._
-import scala.concurrent.{duration, Await}
+import scala.concurrent.duration
 
 object RoomStore{
   val rooms = scala.collection.concurrent.TrieMap[String, ActorRef]()
@@ -69,9 +69,13 @@ class Room(id: String, playlist: Playlist) extends Actor {
 
     case SendTrack(username, trackJson) => {
       val track = trackJson.as[Track]
-      val addedStatus = playlist.addTrack(track)
-      if (Await.result(addedStatus, maxInsertTime))
-        notifyAll(username, trackJson)
+      for {
+        ok <- playlist.addTrack(track)
+        lastAdded <- playlist.lastAdded
+      } if (ok && lastAdded.isDefined) {
+        val item = Json.toJson(lastAdded.get)
+        notifyAll(username, item)
+      }
     }
 
     case Quit(username) => {

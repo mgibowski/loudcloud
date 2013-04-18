@@ -2,7 +2,7 @@ package models
 
 import play.api.libs.iteratee.{Enumerator, Input, Done}
 import play.api.libs.json._
-import org.joda.time.Duration
+import org.joda.time.{DateTime, Duration}
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsString
 
@@ -20,9 +20,21 @@ object Utils{
 }
 
 object JsonImplicits {
-  implicit val jodaDurationReads = new Reads[Duration]{
+  implicit val jodaDurationFormat = new Format[Duration]{
     def reads(json: JsValue) = JsSuccess(new Duration(json.as[Long]))
+    def writes(o: Duration) = JsNumber(o.getMillis)
   }
-  implicit val trackReads = Json.reads[Track]
+  implicit val jodaDateTimeFormat = new Format[DateTime]{
+    def reads(json: JsValue) = JsSuccess(new DateTime(json.as[Long]))
+    def writes(o: DateTime) = JsNumber(o.getMillis())
+  }
+  implicit val trackFormat = Json.format[Track]
+  implicit val playListItemWriter = new Writes[PlaylistItem] {
+    def writes(o: PlaylistItem) = Json.obj(
+    "startTime" -> Json.toJson(o.startTime),
+    "track" -> Json.toJson(o.track)
+    )
+  }
+
 }
 

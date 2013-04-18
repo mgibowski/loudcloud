@@ -4,21 +4,21 @@
             <tbody>
                 <tr class="track-header">
                     <td class="artwork" rowspan="3">
-                        <img class="artwork" height="100" width="100" src="{{artworkUrl}}"></img>
+                        <img class="artwork" height="100" width="100" src="{{track.artworkUrl}}"></img>
                     </td>
                     <td class="when-played">
-                        <span class="played-at"> 15:33 </span>
+                        <span class="played-at"> {{startTime}} </span>
                         <span class="now-playing">Now playing</span>
                     </td>
                 </tr>
                 <tr class="track-info">
                     <td colspan="1">
-                        <div class="title"><a href="{{permalinkUrl}}">{{title}}</a></div>
-                        <div class="artist"><a href="{{permalinkUrl}}>">{{soundCloudUsername}}</a></div>
+                        <div class="title"><a href="{{track.permalinkUrl}}">{{track.title}}</a></div>
+                        <div class="artist"><a href="{{track.permalinkUrl}}>">{{track.soundCloudUsername}}</a></div>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <input type="hidden" class="trackId" value="{{soundCloudId}}">
+    <input type="hidden" class="trackId" value="{{track.soundCloudId}}">
 </div>
