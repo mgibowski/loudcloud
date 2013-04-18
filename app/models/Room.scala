@@ -75,9 +75,11 @@ class Room(id: String, playlist: Playlist) extends Actor {
       val track = trackJson.as[Track]
       for {
         ok <- playlist.addTrack(track)
-        lastAdded <- playlist.lastAdded
-      } if (ok && lastAdded.isDefined) {
-        val item = Json.toJson(lastAdded.get)
+        if ok
+        maybeLastItem <- playlist.lastAdded
+        lastItem <- maybeLastItem
+      } {
+        val item = Json.toJson(lastItem)
         notifyAll(username, item)
       }
     }
