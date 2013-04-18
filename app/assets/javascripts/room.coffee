@@ -45,9 +45,11 @@ define ['scClientId'], (scClientId) ->
   # Receiving things from WebSocket
   receiveEvent = (event) ->
     data = $.parseJSON(event.data)
-    if data.msg?
-      console.log(data.msg)
-    if data.track?
+    if data.membersCount?
+      counterTemplate = if (data.membersCount == 1) then "counter-one" else "counter-many"
+      counterHtml = Mustache.render(MUSTACHE_TEMPLATES[counterTemplate], data)
+      $("#members-count").html(counterHtml)
+    else if data.track?
       start = new Date(data.startTime)
       m = start.getMinutes()
       minutes = if (m < 10) then "0" + m else m

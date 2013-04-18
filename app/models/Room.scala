@@ -15,7 +15,6 @@ import play.api.libs.concurrent.Execution.Implicits._
 import reactivemongo.bson.BSONObjectID
 
 import JsonImplicits._
-import scala.concurrent.duration
 
 object RoomStore{
   val rooms = scala.collection.concurrent.TrieMap[String, ActorRef]()
@@ -39,13 +38,13 @@ object Room {
   implicit val timeout = Timeout(1 second)
 
   def join(room: ActorRef): scala.concurrent.Future[(Iteratee[JsValue,_],Enumerator[JsValue])] = {
-    (room ? Join("some user")).map {
+    (room ? Join).map {
       case Connected(enumerator) =>
         // Create an Iteratee to consume the feed
         val iteratee = Iteratee.foreach[JsValue] { event =>
-          room ! SendTrack("some user", event)
+          room ! SendTrack(event)
         }.mapDone { _ =>
-          room ! Quit("some user")
+          room ! Quit
         }
         (iteratee,enumerator)
       case CannotConnect(error) => Utils.closedSocketWithError(error)
@@ -55,23 +54,22 @@ object Room {
 
 class Room(id: String, playlist: Playlist) extends Actor {
 
-  var members = Set.empty[String]
+  var membersCount = 0
   val (roomEnumerator, roomChannel) = Concurrent.broadcast[JsValue]
-  val maxInsertTime = duration.Duration(200, duration.MILLISECONDS)
 
   def receive = {
 
-    case Join(username) => {
-      members = members + username
+    case Join => {
+      membersCount+=1
       sender ! Connected(roomEnumerator)
-      self ! NotifyJoin(username)
+      self ! NotifyJoin
     }
 
-    case NotifyJoin(username) => {
-      notifyAll(username, Json.obj("msg" -> s"$username has entered the room"))
+    case NotifyJoin => {
+      notifyAll(Json.obj("membersCount" -> membersCount))
     }
 
-    case SendTrack(username, trackJson) => {
+    case SendTrack(trackJson) => {
       val track = trackJson.as[Track]
       for {
         ok <- playlist.addTrack(track)
@@ -80,25 +78,25 @@ class Room(id: String, playlist: Playlist) extends Actor {
         lastItem <- maybeLastItem
       } {
         val item = Json.toJson(lastItem)
-        notifyAll(username, item)
+        notifyAll(item)
       }
     }
 
-    case Quit(username) => {
-      members = members - username
-      notifyAll(username, Json.obj("msg" -> s"$username has left the room"))
+    case Quit => {
+      membersCount-=1
+      notifyAll(Json.obj("membersCount" -> membersCount))
     }
 
   }
 
-  def notifyAll(user: String, msg: JsValue) { roomChannel.push(msg) }
+  def notifyAll(msg: JsValue) { roomChannel.push(msg) }
 
 }
 
-case class Join(username: String)
-case class Quit(username: String)
-case class SendTrack(username: String, track: JsValue)
-case class NotifyJoin(username: String)
+object Join
+object Quit
+case class SendTrack(track: JsValue)
+object NotifyJoin
 
 case class Connected(enumerator:Enumerator[JsValue])
 case class CannotConnect(msg: String)

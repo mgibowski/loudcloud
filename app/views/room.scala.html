@@ -24,8 +24,11 @@
         </div>
      </div>
 
-    <div id="playlist">
+    <div id="members-count">
+        <p>There is <span id="counter">1</span> person in this room</p>
+    </div>
 
+    <div id="playlist">
         @items.map{ item =>
             <div class="track fadein @printStatus(item.status)">
                 <div class="span8 details">
@@ -52,9 +55,6 @@
                 <input type="hidden" class="trackId" value="@item.track.soundCloudId">
             </div>
         }
-
-
-
     </div>
 
 }
