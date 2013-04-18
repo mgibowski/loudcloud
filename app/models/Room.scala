@@ -87,13 +87,3 @@ case class NotifyJoin(username: String)
 
 case class Connected(enumerator:Enumerator[JsValue])
 case class CannotConnect(msg: String)
-
-object Utils{
-  def closedSocketWithError(errorMsg: String) = {
-    // A finished Iteratee sending EOF
-    val iteratee = Done[JsValue, Unit]((), Input.EOF)
-    // Send an error and close the socket
-    val enumerator = Enumerator[JsValue](JsObject(Seq("error" -> JsString(errorMsg)))).andThen(Enumerator.enumInput(Input.EOF))
-    (iteratee, enumerator)
-  }
-}
