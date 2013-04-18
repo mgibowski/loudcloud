@@ -27,7 +27,7 @@ object Application extends Controller {
         room = RoomStore.findRoomBy(id)
       } yield {
         (room.isDefined, !playlistItems.isEmpty) match {
-          case (false, false) => NotFound("Room not found")
+          case (false, false) => NotFound(views.html.notFound())
           case (false, true) => { // room exists, but actor is dead
             RoomStore.createRoomWith(id)
             Ok(views.html.room(playlistItems))
