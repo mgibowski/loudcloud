@@ -1,4 +1,16 @@
-This is your new Play 2.1 application
+Loudcloud
 =====================================
 
-This file will be packaged with your application, when using `play dist`.
+If you want to run this software locally, you will need these:
+
+1. JDK and Playframework 2.0
+2. MongoDB
+
+Then for the integration with SoundCloud:
+1. Register at soundcloud.com if you have no account yet
+2. Register your app at http://developers.soundcloud.com/
+3. Create a new file conf/secrets.conf (you can make a copy of conf/secrets.conf.default) and paste your sound cloud client_id there
+
+If you want to see it online: http://www.loud.finpack.pl
+
+Have fun!
