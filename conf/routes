@@ -10,6 +10,6 @@ GET     /room/:id                       controllers.Application.enterRoom(id: St
 GET     /room/:id/ws                    controllers.Application.roomWS(id: String)
 
 GET     /assets/javascripts/scClientId.js          controllers.Application.soundCloudClientId
-GET     /assets/javascripts/scClientId.min.js      controllers.Application.soundCloudClientId
+GET     /assets/javascripts-min/scClientId.js      controllers.Application.soundCloudClientId
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                       controllers.Assets.at(path="/public", file)
