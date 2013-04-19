@@ -11,9 +11,8 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 object Application extends Controller {
   
-  def index = Action { implicit request: RequestHeader =>
-    Ok(views.html.index())
-  }
+  def index = Action { Ok(views.html.index()) }
+  def about = Action { Ok(views.html.about()) }
 
   def createRoom = Action {
     val roomId = RoomStore.createNewRoom()

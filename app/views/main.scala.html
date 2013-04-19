@@ -1,5 +1,7 @@
-@(title: String)(content: Html)
-
+@(title: String, home: Boolean = false, about: Boolean = false)(content: Html)
+@printActive(a: Boolean) = {
+  @if(a) { class="active" }
+}
 <!DOCTYPE html>
 
 <html>
@@ -24,9 +26,8 @@
 
             <div class="masthead">
                 <ul class="nav nav-pills pull-right">
-                    <li class="active"> <a href="@routes.Application.index().url"> Home </a> </li>
-                    <li> <a href="#"> About </a> </li>
-                    <li> <a href="#"> Login </a> </li>
+                    <li @printActive(home)> <a href="@routes.Application.index().url">Home</a> </li>
+                    <li @printActive(about)> <a href="@routes.Application.about().url">About</a> </li>
                 </ul>
                 <h3 class="muted loudcloud-logo"><a href="@routes.Application.index().url">  Loudcloud </a></h3>
             </div>

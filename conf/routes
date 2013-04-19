@@ -4,6 +4,7 @@
 
 # Home page
 GET     /                               controllers.Application.index
+GET     /about                          controllers.Application.about
 POST    /room/new                       controllers.Application.createRoom
 GET     /room/:id                       controllers.Application.enterRoom(id: String)
 GET     /room/:id/ws                    controllers.Application.roomWS(id: String)

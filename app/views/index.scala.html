@@ -1,4 +1,4 @@
-@main("Welcome to Loudcloud!") {
+@main("Welcome to Loudcloud!", home = true){
 
     @helper.requireJs(core = routes.Assets.at("javascripts/require.js").url, module = routes.Assets.at("javascripts/home").url)
 

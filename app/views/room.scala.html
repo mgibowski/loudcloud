@@ -2,7 +2,7 @@
 @import PlaylistItemStatus._
 @printStatus(s: Option[PlaylistItemStatus]) = { @s.map(_.toString().toLowerCase) }
 @printTime(t: org.joda.time.DateTime) = { @t.getHourOfDay : @if(t.getMinuteOfHour < 10) {0}@t.getMinuteOfHour }
-@main("Room") {
+@main("Room"){
 
     @helper.requireJs(core = routes.Assets.at("javascripts/require.js").url, module = routes.Assets.at("javascripts/room").url)
 
