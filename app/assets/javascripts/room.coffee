@@ -60,7 +60,7 @@ define ['scClientId'], (scClientId) ->
 
   # Connecting to Room WebSocket
   connectToWs = () ->
-    url = "ws://localhost:9000" + window.location.pathname + "/ws"
+    url = "ws://" + window.location.host + window.location.pathname + "/ws"
 #    WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
     WS = WebSocket
     window.roomSocket = new WS(url)
