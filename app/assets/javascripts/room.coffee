@@ -16,10 +16,12 @@ define ['scClientId'], (scClientId) ->
       playTrackById(trackId)
 
   playTrackById = (trackId) ->
-    SC.whenStreamingReady () -> SC.stream(trackId).play
-      onfinish: () ->
-        $(".playing").removeClass("playing").addClass("played")
-        updatePlaylist()
+    SC.whenStreamingReady () ->
+      if ($("#mute-switch").hasClass("disabled")) then $("#mute-switch").removeClass("disabled")
+      SC.stream(trackId).play
+        onfinish: () ->
+          $(".playing").removeClass("playing").addClass("played")
+          updatePlaylist()
 
   # User adds new track to the playlist
   $("form.add-track button").click ->
@@ -41,6 +43,21 @@ define ['scClientId'], (scClientId) ->
           duration: data.duration
         window.roomSocket.send(JSON.stringify(track))
     false
+
+  # Muting / unmuting the sound
+  $("#mute-switch").click ->
+    icon = $("#mute-switch i")
+    state = icon.attr("class")
+    params = null
+    switch state
+      when "icon-volume-off"
+        soundManager.mute()
+        params = {classSuffix: "up", command: "unmute"}
+      when "icon-volume-up"
+        soundManager.unmute()
+        params = {classSuffix: "off", command: "mute"}
+    html = Mustache.render(MUSTACHE_TEMPLATES["mute-switch"], params)
+    $("#mute-switch").html(html)
 
   # Receiving things from WebSocket
   receiveEvent = (event) ->
