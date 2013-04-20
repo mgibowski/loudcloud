@@ -59,6 +59,16 @@ define ['scClientId'], (scClientId) ->
     html = Mustache.render(MUSTACHE_TEMPLATES["mute-switch"], params)
     $("#mute-switch").html(html)
 
+  # Removing tracks from the playlist
+  $(document).on "click", ".remove-track", ->
+    toRemove = $(this).closest(".track")
+    if (toRemove.hasClass("playing"))
+      SC.streamStopAll()
+      toRemove.remove()
+      updatePlaylist()
+    else
+      toRemove.remove()
+
   # Receiving things from WebSocket
   receiveEvent = (event) ->
     data = $.parseJSON(event.data)
