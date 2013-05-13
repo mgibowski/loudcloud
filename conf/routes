@@ -6,8 +6,8 @@
 GET     /                               controllers.Application.index
 GET     /about                          controllers.Application.about
 POST    /room/new                       controllers.Application.createRoom
-GET     /room/:id                       controllers.Application.enterRoom(id: String)
-GET     /room/:id/ws                    controllers.Application.roomWS(id: String)
+GET     /room/$id<[0-9a-f]{24}>         controllers.Application.enterRoom(id: String)
+GET     /room/$id<[0-9a-f]{24}>/ws      controllers.Application.roomWS(id: String)
 
 GET     /assets/javascripts/scClientId.js          controllers.Application.soundCloudClientId
 GET     /assets/javascripts-min/scClientId.js      controllers.Application.soundCloudClientId
