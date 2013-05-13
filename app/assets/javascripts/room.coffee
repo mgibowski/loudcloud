@@ -42,6 +42,7 @@ define ['scClientId'], (scClientId) ->
           artworkUrl: data.artwork_url
           duration: data.duration
         window.roomSocket.send(JSON.stringify(track))
+        $("form.add-track input").val("")
     false
 
   # Muting / unmuting the sound
