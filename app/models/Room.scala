@@ -60,12 +60,12 @@ class Room(id: String, playlist: Playlist) extends Actor {
   def receive = {
 
     case Join => {
-      membersCount+=1
       sender ! Connected(roomEnumerator)
       self ! NotifyJoin
     }
 
     case NotifyJoin => {
+      membersCount+=1
       notifyAll(Json.obj("membersCount" -> membersCount))
     }
 

@@ -31,7 +31,7 @@ object Application extends Controller {
             RoomStore.createRoomWith(id)
             Ok(views.html.room(playlistItems))
           }
-          case (_, _) => Ok(views.html.room(playlistItems))
+          case (true, _) => Ok(views.html.room(playlistItems))
         }
       }
     }
