@@ -12,6 +12,4 @@ Then for the integration with SoundCloud:
 2. Register your app at http://developers.soundcloud.com/
 3. Create a new file `conf/secrets.conf` (you can make a copy of `conf/secrets.conf.default`) and paste your sound cloud client_id there
 
-If you want to see it online: http://loud.finpack.pl
-
 Have fun!
